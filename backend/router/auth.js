@@ -50,13 +50,17 @@ router.post('/login', async(req,res)=>{
          }
         // console.log("Hello Data", req.body);
         const Login= await User.findOne({email:email});
-        const isMatch = await bcrypt.compare(password, Login.password)
-        if(!isMatch){
-            res.status(400).json({error: "Error"});
+        if(Login){
+            const isMatch = await bcrypt.compare(password, Login.password)
+            if(!isMatch){
+                res.status(400).json({error: "InValid Credentials"});
+            }else{
+                res.json({message: "Logged In"});
+            }
         }else{
-            res.json({message: "Logged In"});
+            res.status(400).json({error: "Invalid Credentials"});
         }
-        console.log(Login.email)
+       
     }
     catch(err){
         console.log(err, "hell")
